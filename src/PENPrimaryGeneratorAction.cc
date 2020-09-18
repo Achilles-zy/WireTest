@@ -11,7 +11,9 @@
 //#include "TMath.h"
 #include "Randomize.hh"
 
-PENPrimaryGeneratorAction::PENPrimaryGeneratorAction()
+PENPrimaryGeneratorAction::PENPrimaryGeneratorAction():
+	G4VUserPrimaryGeneratorAction(),
+	ParticleE(0)
 {
     PENGPS = new G4GeneralParticleSource();
 
@@ -52,4 +54,16 @@ PENPrimaryGeneratorAction::~PENPrimaryGeneratorAction()
 void PENPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
     PENGPS->GeneratePrimaryVertex(anEvent);
+	anEvent->GetEventID();
+	if (anEvent->GetEventID() == 0) {
+		ParticleE = PENGPS->GetCurrentSource()->GetParticleEnergy();
+
+	}
+
 }
+
+G4double PENPrimaryGeneratorAction::GetParticleE() {
+
+	return ParticleE;
+}
+

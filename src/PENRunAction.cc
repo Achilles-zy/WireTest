@@ -8,11 +8,14 @@
 
 #include "g4root.hh"
 
+#include <fstream>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-PENRunAction::PENRunAction():
+PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen):
 	EscapedElectronCount(0),
-	SignalEventCount(0)
+	SignalEventCount(0),
+	ParticleE(0.),
+	PrimaryGenerator(gen)
 {
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetVerboseLevel(1);
@@ -53,24 +56,50 @@ void PENRunAction::BeginOfRunAction(const G4Run* aRun)
 
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
-  G4cout << "Run " << aRun->GetRunID() << " started." << G4endl;
+  if (G4RunManager::GetRunManager()->GetRunManagerType() == 1) {
+	  G4cout << "Run " << aRun->GetRunID() << " started." << G4endl;
+  }
+  
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
 void PENRunAction::EndOfRunAction(const G4Run* aRun)
 {
+	G4RunManager::GetRunManager()->GetRunManagerType();
+	
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Merge();
-  G4cout << "Run " << aRun->GetRunID() << " finished." << G4endl;
-  G4cout << "Escaped Electron Count = " << EscapedElectronCount.GetValue() << G4endl;
-  G4cout << "Signal Event Count =" << SignalEventCount.GetValue() << G4endl;
+
+  if (G4RunManager::GetRunManager()->GetRunManagerType() == 1) {
+	  G4cout << "Run " << aRun->GetRunID() << " finished." << G4endl;
+	  G4cout << "Electron Energy = " << PrimaryGenerator->GetParticleE() << G4endl;
+	  G4cout << "Escaped Electron Count = " << EscapedElectronCount.GetValue() << G4endl;
+	  G4cout << "Signal Event Count = " << SignalEventCount.GetValue() << G4endl;
+
+	  std::ofstream output;
+	  if (aRun->GetRunID() == 0) {
+		  output.open("Simulation Result.txt", std::ios::ate);
+	  }
+	  else
+	  {
+		  output.open("Simulation Result.txt", std::ios::app);
+	  }
+	  
+	  output << "Electron Energy =" << std::setw(5) << std::setiosflags(std::ios::fixed)<< std::setprecision(2)<<PrimaryGenerator->GetParticleE() << " MeV "
+		  << "Escaped Electron Count =" << std::setw(5) << EscapedElectronCount.GetValue() << " "
+		  << "Signal Event Count =" << std::setw(8) << SignalEventCount.GetValue() << G4endl;
+	  output.close();
+
+  }
+
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->FillNtupleIColumn(0, EscapedElectronCount.GetValue());
   analysisManager->FillNtupleIColumn(1, SignalEventCount.GetValue());
 
   analysisManager->AddNtupleRow();
-
+  
   analysisManager->Write();
   analysisManager->CloseFile();
 }
