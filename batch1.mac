@@ -1,0 +1,57 @@
+/control/verbose 0
+/control/saveHistory
+/run/verbose 0
+#
+# Change the default number of threads (in multi-threaded mode)
+/run/numberOfThreads 8
+#
+# Initialize kernel
+/run/initialize
+#/gps/particle ion
+#/gps/ion 90 232 0 0
+/gps/pos/confine Conductor
+/gps/particle e-
+
+#run 0
+/gps/energy 10. keV
+/run/beamOn 1000000
+
+#run 1
+/gps/energy 20. keV
+/run/beamOn 1000000
+
+#run 2
+/gps/energy 40. keV
+/run/beamOn 1000000
+
+#run 3
+/gps/energy 60. keV
+/run/beamOn 1000000
+
+#run 4
+/gps/energy 80. keV
+/run/beamOn 1000000
+
+#run 5
+/gps/energy 100. keV
+/run/beamOn 1000000
+
+#run 6
+/gps/energy 150. keV
+/run/beamOn 1000000
+
+#run 7
+/gps/energy 200. keV
+/run/beamOn 1000000
+
+#run 8
+/gps/energy 300 keV
+/run/beamOn 1000000
+
+#run 9
+/gps/energy 400. keV
+/run/beamOn 1000000
+
+#run 10
+/gps/energy 600. keV
+/run/beamOn 1000000
