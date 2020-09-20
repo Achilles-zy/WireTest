@@ -84,8 +84,10 @@ void PENEventAction::EndOfEventAction(const G4Event* evt)
   auto analysisManager = G4AnalysisManager::Instance();
   
   if (ifEscaped == true && EscapedEnergy > EnergyThreshold) {
+ // if ( EscapedEnergy > EnergyThreshold) {
       analysisManager->FillH1(1, EscapedEnergy);
       analysisManager->FillNtupleDColumn(3, EscapedEnergy);
+      //G4cout << "count signal" << G4endl;
       run->CountSignalEvent();
   }
 

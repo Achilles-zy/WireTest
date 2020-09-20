@@ -93,10 +93,10 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
 		  output.open("Simulation Result.txt", std::ios::app);
 	  }
 	  output
-		  << "Run ID:\t" << std::setw(5) << aRun->GetRunID()<<'\t'
-		  <<"Primary Particle is\t"<< std::setw(5)<<PrimaryGenerator->GetPrimaryName()<<'\t'
-	      << "Primary Energy(MeV) =\t" << std::setw(5) << std::setiosflags(std::ios::fixed)<< std::setprecision(2)<<PrimaryGenerator->GetPrimaryE()<<'\t'
-		  << "Escaped Electron Count =\t" << std::setw(10) << EscapedElectronCount.GetValue() << '\t'
+		  << "Run ID:\t" << std::setw(5) << aRun->GetRunID() << '\t'
+		  << "Primary Particle is\t" << std::setw(5) << PrimaryGenerator->GetPrimaryName() << '\t'
+		  << "Primary Energy(MeV) =\t" << std::setw(5) << std::setiosflags(std::ios::fixed) << std::setprecision(2) << PrimaryGenerator->GetPrimaryE() << '\t'
+		  << "Escaped Electron Count =\t" << std::left << std::setw(10) << EscapedElectronCount.GetValue() << '\t'
 		  << "Signal Event Count =\t" << std::setw(10) << SignalEventCount.GetValue() << G4endl;
 	  output.close();
 	  //std::DecimalFormat df1 = new DecimalFormat("0.0");

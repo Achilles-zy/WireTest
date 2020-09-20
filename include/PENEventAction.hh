@@ -23,7 +23,7 @@ class PENEventAction : public G4UserEventAction
     void BeginOfEventAction(const G4Event*);
     void EndOfEventAction(const G4Event*);
     void AddEscapedEnergy(G4double);
-    void EscapedTrue() { ifEscaped == true; }
+    void EscapedTrue() { ifEscaped = true; }
     void AddToSiPM(G4int);
 	void CountSiPMPhoton(G4int ph) { PhotonCount = PhotonCount + ph; }
 
