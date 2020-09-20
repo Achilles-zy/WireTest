@@ -13,7 +13,8 @@
 
 PENPrimaryGeneratorAction::PENPrimaryGeneratorAction():
 	G4VUserPrimaryGeneratorAction(),
-	ParticleE(0)
+	PrimaryE(0),
+	PrimaryName("")
 {
     PENGPS = new G4GeneralParticleSource();
 
@@ -56,14 +57,17 @@ void PENPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     PENGPS->GeneratePrimaryVertex(anEvent);
 	anEvent->GetEventID();
 	if (anEvent->GetEventID() == 0) {
-		ParticleE = PENGPS->GetCurrentSource()->GetParticleEnergy();
+		PrimaryE = PENGPS->GetCurrentSource()->GetParticleEnergy();
+		PrimaryName = PENGPS->GetCurrentSource()->GetParticleDefinition()->GetParticleName();
 
 	}
 
 }
 
-G4double PENPrimaryGeneratorAction::GetParticleE() {
-
-	return ParticleE;
+G4double PENPrimaryGeneratorAction::GetPrimaryE() {
+	return PrimaryE;
 }
 
+G4String PENPrimaryGeneratorAction::GetPrimaryName() {
+	return PrimaryName;
+}

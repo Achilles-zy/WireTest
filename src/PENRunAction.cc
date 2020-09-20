@@ -7,7 +7,7 @@
 #include "G4SystemOfUnits.hh"
 
 #include "g4root.hh"
-
+#include <iomanip>
 #include <fstream>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
@@ -15,7 +15,8 @@ PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen):
 	EscapedElectronCount(0),
 	SignalEventCount(0),
 	ParticleE(0.),
-	PrimaryGenerator(gen)
+	PrimaryGenerator(gen),
+	FileName("File")
 {
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetVerboseLevel(1);
@@ -49,11 +50,11 @@ void PENRunAction::BeginOfRunAction(const G4Run* aRun)
 {
   G4int RunID = aRun->GetRunID();
   auto analysisManager = G4AnalysisManager::Instance();
-  G4String fileName = "Result";
-  fileName = std::to_string(RunID);
-  analysisManager->SetFileName(fileName);
-  analysisManager->OpenFile();
-
+  //G4String FileName = "Result";
+  G4String filename = std::to_string(RunID);
+  //analysisManager->SetFileName(FileName);
+  analysisManager->OpenFile(filename);
+  
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
   if (G4RunManager::GetRunManager()->GetRunManagerType() == 1) {
@@ -67,14 +68,19 @@ void PENRunAction::BeginOfRunAction(const G4Run* aRun)
  
 void PENRunAction::EndOfRunAction(const G4Run* aRun)
 {
-	G4RunManager::GetRunManager()->GetRunManagerType();
+  G4RunManager::GetRunManager()->GetRunManagerType();
 	
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Merge();
 
+  auto analysisManager = G4AnalysisManager::Instance();
+  G4String fileName = PrimaryGenerator->GetPrimaryName() + "_" + std::to_string(PrimaryGenerator->GetPrimaryE()).substr(0, 4) + "MeV";	  G4cout << fileName << G4endl;
+ // analysisManager->SetFileName(fileName);
+
   if (G4RunManager::GetRunManager()->GetRunManagerType() == 1) {
 	  G4cout << "Run " << aRun->GetRunID() << " finished." << G4endl;
-	  G4cout << "Electron Energy = " << PrimaryGenerator->GetParticleE() << G4endl;
+	  G4cout << "Particle Source is " << PrimaryGenerator->GetPrimaryName() << G4endl;
+	  G4cout << "Primary Energy = " << PrimaryGenerator->GetPrimaryE() << G4endl;
 	  G4cout << "Escaped Electron Count = " << EscapedElectronCount.GetValue() << G4endl;
 	  G4cout << "Signal Event Count = " << SignalEventCount.GetValue() << G4endl;
 
@@ -86,22 +92,24 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
 	  {
 		  output.open("Simulation Result.txt", std::ios::app);
 	  }
-	  
-	  output << "Electron Energy =" << std::setw(5) << std::setiosflags(std::ios::fixed)<< std::setprecision(2)<<PrimaryGenerator->GetParticleE() << " MeV "
-		  << "Escaped Electron Count =" << std::setw(5) << EscapedElectronCount.GetValue() << " "
-		  << "Signal Event Count =" << std::setw(8) << SignalEventCount.GetValue() << G4endl;
+	  output
+		  << "Run ID:\t" << std::setw(5) << aRun->GetRunID()<<'\t'
+		  <<"Primary Particle is\t"<< std::setw(5)<<PrimaryGenerator->GetPrimaryName()<<'\t'
+	      << "Primary Energy(MeV) =\t" << std::setw(5) << std::setiosflags(std::ios::fixed)<< std::setprecision(2)<<PrimaryGenerator->GetPrimaryE()<<'\t'
+		  << "Escaped Electron Count =\t" << std::setw(10) << EscapedElectronCount.GetValue() << '\t'
+		  << "Signal Event Count =\t" << std::setw(10) << SignalEventCount.GetValue() << G4endl;
 	  output.close();
-
+	  //std::DecimalFormat df1 = new DecimalFormat("0.0");
   }
 
-  auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->FillNtupleIColumn(0, EscapedElectronCount.GetValue());
   analysisManager->FillNtupleIColumn(1, SignalEventCount.GetValue());
 
   analysisManager->AddNtupleRow();
-  
   analysisManager->Write();
+
   analysisManager->CloseFile();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

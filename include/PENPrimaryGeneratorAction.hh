@@ -14,14 +14,16 @@ class PENPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 private:
     G4GeneralParticleSource* PENGPS;
-    G4double ParticleE;
+    G4double PrimaryE;
+    G4String PrimaryName;
     PENRunAction* RunAction;
 public:
     PENPrimaryGeneratorAction();
     ~PENPrimaryGeneratorAction();
     void GeneratePrimaries(G4Event* anEvent);
 
-    G4double GetParticleE();
+    G4double GetPrimaryE();
+    G4String GetPrimaryName();
 
 };
 

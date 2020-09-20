@@ -40,6 +40,7 @@ private:
 	PENPrimaryGeneratorAction* PrimaryGenerator;
 	G4Accumulable<G4int> EscapedElectronCount;
 	G4Accumulable<G4int> SignalEventCount;
+	G4String FileName;
 
 };
 
