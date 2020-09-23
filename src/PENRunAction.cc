@@ -18,18 +18,17 @@ PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen):
 	PrimaryGenerator(gen),
 	FileName("File")
 {
-  auto analysisManager = G4AnalysisManager::Instance();
-  analysisManager->SetVerboseLevel(1);
-  analysisManager->CreateH1("Electron Energy", "Electron Energy", 200, 0 * keV, 1 * MeV);
-  analysisManager->CreateH1("Total Energy", "Total Energy", 200, 0, 1 * MeV);
+	auto analysisManager = G4AnalysisManager::Instance();
+	analysisManager->CreateH1("ElectronEnergy", "Electron Energy", 200, 0 * keV, 1 * MeV);
+	analysisManager->CreateH1("TotalEnergy", "Total Energy", 200, 0, 1 * MeV);
 
-  analysisManager->CreateNtuple("Data", "EventCount");
-  analysisManager->CreateNtupleIColumn("EscapedEventCount");
-  analysisManager->CreateNtupleIColumn("SignalEventCount");
-  analysisManager->CreateNtupleDColumn("Electron Energy");
-  analysisManager->CreateNtupleDColumn("Total Energy");
+	analysisManager->CreateNtuple("Data", "EventCount");
+	analysisManager->CreateNtupleIColumn("EscapedEventCount");
+	analysisManager->CreateNtupleIColumn("SignalEventCount");
+	analysisManager->CreateNtupleDColumn("ElectronEnergy");
+	analysisManager->CreateNtupleDColumn("TotalEnergy");
 
-  analysisManager->FinishNtuple();
+	analysisManager->FinishNtuple();
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->RegisterAccumulable(EscapedElectronCount);
   accumulableManager->RegisterAccumulable(SignalEventCount);
@@ -54,7 +53,10 @@ void PENRunAction::BeginOfRunAction(const G4Run* aRun)
   G4String filename = std::to_string(RunID);
   //analysisManager->SetFileName(FileName);
   analysisManager->OpenFile(filename);
-  
+
+  analysisManager->SetVerboseLevel(1);
+
+
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
   if (G4RunManager::GetRunManager()->GetRunManagerType() == 1) {
