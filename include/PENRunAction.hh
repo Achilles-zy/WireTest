@@ -9,6 +9,7 @@
 #include "G4Accumulable.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "PENPrimaryGeneratorAction.hh"
+#include "PENDetectorConstruction.hh"
 
 class G4Run;
 class PENPrimaryGeneratorAction;
@@ -16,7 +17,7 @@ class PENPrimaryGeneratorAction;
 class PENRunAction : public G4UserRunAction
 {
 public:
-	PENRunAction(PENPrimaryGeneratorAction*);
+	PENRunAction(PENPrimaryGeneratorAction*, PENDetectorConstruction*);
 	~PENRunAction();
 
 	G4double ParticleE;
@@ -38,6 +39,7 @@ private:
 	//G4int SiPMEventCount;
 	//G4int VetoEventCount;
 	PENPrimaryGeneratorAction* PrimaryGenerator;
+	PENDetectorConstruction* fDetCons;
 	G4Accumulable<G4int> EscapedElectronCount;
 	G4Accumulable<G4int> SignalEventCount;
 	G4String FileName;

@@ -65,12 +65,15 @@ PENDetectorConstruction::PENDetectorConstruction():
 	SiPM_10(nullptr),
 	SiPM_11(nullptr)
 {
+	fDetectorMessenger = new PENDetectorMessenger(this);
 	matconstructor = new PENMaterials;
 	MPT_PEN = new G4MaterialPropertiesTable();
 	AbsorptionLength = 1.5;//value at 400 nm
 	fRES = 1.0;
 	fLY = 3000. / MeV;
 	fABSFile = "PEN_ABS";
+	fType = "A1";
+	fConfine = "Wire";
 	pmtReflectivity = 0.50;
 	G4cout << "Start Construction" << G4endl;
 	DefineMat();
@@ -81,6 +84,17 @@ PENDetectorConstruction::PENDetectorConstruction():
 
 PENDetectorConstruction::~PENDetectorConstruction()
 {
+	delete fDetectorMessenger;
+}
+
+void PENDetectorConstruction::SetWireType(G4String type) {
+	fType = type;
+	G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void PENDetectorConstruction::SetConfine(G4String confine) {
+	fConfine = confine;
+	G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void PENDetectorConstruction::DefineMat() 
@@ -500,7 +514,7 @@ G4VPhysicalVolume* PENDetectorConstruction::Construct()
   G4LogicalVolume* logicEnv = new G4LogicalVolume(solidEnv, env_mat, "Envelope");
   auto physEnv = new G4PVPlacement(0, G4ThreeVector(), logicEnv, "Envelope", logicWorld, false, 0, checkOverlaps);
 
-  G4String WireType = "A1";
+  G4String WireType = fType;
   G4double WireLength = 20 * cm;
 
   if (WireType == "A2") {
@@ -560,7 +574,7 @@ G4VPhysicalVolume* PENDetectorConstruction::Construct()
 	  G4LogicalVolume* logicHJacket = new G4LogicalVolume(solidHJacket, JacketMat, "logicHJacket");
 	  G4PVPlacement* physHJacket = new G4PVPlacement(0, G4ThreeVector(), logicHJacket, "HarnessJacket", logicHarness, false, 0, checkOverlaps);
 
-	  G4Tubs* solidWire = new G4Tubs("solidJacket", 0 * mm, WireRadius, WireLength / 2, 0, twopi);
+	  G4Tubs* solidWire = new G4Tubs("solidWire", 0 * mm, WireRadius, WireLength / 2, 0, twopi);
 	  G4LogicalVolume* logicWire = new G4LogicalVolume(solidWire, JacketMat, "logicWire");
 	  G4PVPlacement* physWire_0 = new G4PVPlacement(0, G4ThreeVector(sqrt(2) * WireRadius, 0, 0), logicWire, "Wire", logicHarness, false, 0, checkOverlaps);
 	  G4PVPlacement* physWire_1 = new G4PVPlacement(0, G4ThreeVector(0, sqrt(2) * WireRadius, 0), logicWire, "Wire", logicHarness, false, 1, checkOverlaps);

@@ -12,12 +12,14 @@
 #include "G4LogicalSkinSurface.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "PENMaterials.hh"
+#include "PENDetectorMessenger.hh"
 //#include "TMath.h"
 //#include "G4GDMLParser.hh"
 
 class PENMaterials;
 class G4VPhysicalVolume;
 class G4LogicalVolume;
+class PENDeterctorMessenger;
 
 class PENDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -30,8 +32,18 @@ class PENDetectorConstruction : public G4VUserDetectorConstruction
         G4VPhysicalVolume* Construct();
         void DefineMat();
         void SetABS(G4double);
+
+        void SetWireType(G4String);
+        void SetConfine(G4String);
     
+        G4String GetWireType() {
+            return fType;
+        }
+        G4String GetConfine() {
+            return fConfine;
+        }
     private:
+
 		G4VPhysicalVolume* Env;
 		G4VPhysicalVolume* SiPM_0;
 		G4VPhysicalVolume* SiPM_1;
@@ -95,7 +107,9 @@ class PENDetectorConstruction : public G4VUserDetectorConstruction
 		G4Material* matCu;
 
         G4String fABSFile;
-
+        G4String fType;
+        G4String fConfine;
+        PENDetectorMessenger* fDetectorMessenger;
 
         
 };

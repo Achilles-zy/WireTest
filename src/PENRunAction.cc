@@ -11,13 +11,14 @@
 #include <fstream>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
-PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen):
+PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen,PENDetectorConstruction* det):
 	EscapedElectronCount(0),
 	SignalEventCount(0),
 	ParticleE(0.),
 	PrimaryGenerator(gen),
 	FileName("File")
 {
+	fDetCons = det;
 	auto analysisManager = G4AnalysisManager::Instance();
 	analysisManager->CreateH1("ElectronEnergy", "Electron Energy", 200, 0 * keV, 1 * MeV);
 	analysisManager->CreateH1("TotalEnergy", "Total Energy", 200, 0, 1 * MeV);
@@ -50,7 +51,7 @@ void PENRunAction::BeginOfRunAction(const G4Run* aRun)
   G4int RunID = aRun->GetRunID();
   auto analysisManager = G4AnalysisManager::Instance();
   //G4String FileName = "Result";
-  G4String filename = std::to_string(RunID);
+  G4String filename = fDetCons->GetWireType() + "_" + fDetCons->GetConfine() + "_" + std::to_string(RunID);
   //analysisManager->SetFileName(FileName);
   analysisManager->OpenFile(filename);
 
