@@ -25,3 +25,5 @@ A1 A2
 /PEN/Det/Set/Confine
 
 Set your confine volume name to change file name. This cmd is only for changing file name, use /gps/pos/confine to actually change your confine volume.
+
+But if necessary you can basically put any string in the file name with this cmd.
