@@ -6,15 +6,12 @@
 # Change the default number of threads (in multi-threaded mode)
 /run/numberOfThreads 16
 #
-
-#/gps/particle ion
-#/gps/ion 90 232 0 0
-/PEN/Det/Set/WireType A1
-/PEN/Det/Set/Confine Harness
-
 # Initialize kernel
 /run/initialize
-/gps/pos/confine Harness
+#/gps/particle ion
+#/gps/ion 90 232 0 0
+/gps/pos/confine Conductor
+
 
 #run 0
 /gps/particle ion
