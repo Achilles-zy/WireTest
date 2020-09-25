@@ -5,10 +5,12 @@
 #include "globals.hh"
 #include "G4SystemOfUnits.hh"
 #include "PENRunAction.hh"
+#include "PENDetectorConstruction.hh"
 
 class G4GeneralParticleSource;
 class G4Event;
 class PENRunAction;
+class PENDetectorConstruction;
 
 class PENPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
@@ -17,8 +19,9 @@ private:
     G4double PrimaryE;
     G4String PrimaryName;
     PENRunAction* RunAction;
+    PENDetectorConstruction* fDetCons;
 public:
-    PENPrimaryGeneratorAction();
+    PENPrimaryGeneratorAction(PENDetectorConstruction*);
     ~PENPrimaryGeneratorAction();
     void GeneratePrimaries(G4Event* anEvent);
 

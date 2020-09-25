@@ -68,8 +68,6 @@ set(PENVetoSim_SCRIPTS
   #filegen_point_source.py
   #scan.c
   vis.mac
-  batch-Conductor-Electron.mac
-  batch-Conductor-Radioactive.mac
   batch-A1Wire-Radioactive.mac
   batch-A2Wire-Radioactive.mac
   src1.mac

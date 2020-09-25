@@ -42,6 +42,12 @@ class PENDetectorConstruction : public G4VUserDetectorConstruction
         G4String GetConfine() {
             return fConfine;
         }
+        G4double GetWireRadius() {
+            return fWireRadius;
+        }
+        G4double GetWireLength() {
+            return fWireLength;
+        }
     private:
 
 		G4VPhysicalVolume* Env;
@@ -109,6 +115,8 @@ class PENDetectorConstruction : public G4VUserDetectorConstruction
         G4String fABSFile;
         G4String fType;
         G4String fConfine;
+        G4double fWireRadius;
+        G4double fWireLength;
         PENDetectorMessenger* fDetectorMessenger;
 
         

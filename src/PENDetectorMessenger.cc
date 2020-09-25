@@ -19,16 +19,16 @@ PENDetectorMessenger::PENDetectorMessenger(PENDetectorConstruction* Det)
 	commandSetWireType(0),
 	commandSetConfine(0)
 {
-	fDetDir = new G4UIdirectory("/PEN/Det/Set");
+	fDetDir = new G4UIdirectory("/PEN/det/set");
 	fDetDir->SetGuidance("detector construction commands");
 
-	commandSetWireType = new G4UIcmdWithAString("/PEN/Det/Set/WireType", this);
+	commandSetWireType = new G4UIcmdWithAString("/PEN/det/set/wiretype", this);
 	commandSetWireType->SetGuidance("Select wire type.");
 	commandSetWireType->SetParameterName("choice", false);
 	commandSetWireType->AvailableForStates(G4State_PreInit, G4State_Idle);
 	commandSetWireType->SetToBeBroadcasted(false);
 
-	commandSetConfine = new G4UIcmdWithAString("/PEN/Det/Set/Confine", this);
+	commandSetConfine = new G4UIcmdWithAString("/PEN/det/set/confine", this);
 	commandSetConfine->SetGuidance("Set confine name in file name.");
 	commandSetConfine->SetParameterName("choice", false);
 	commandSetConfine->AvailableForStates(G4State_PreInit, G4State_Idle);

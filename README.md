@@ -29,3 +29,5 @@ Set your confine volume name to change file name. This cmd is only for changing 
 But if necessary you can basically put any string in the file name with this cmd.
 
 root file name: Wiretype_Confine info_Run ID
+
+Default confinement of src is Wire

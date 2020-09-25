@@ -90,6 +90,12 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
 	  std::ofstream output;
 	  if (aRun->GetRunID() == 0) {
 		  output.open("Simulation Result.txt", std::ios::ate);
+		  output.open("Simulation Result.txt", std::ios::ate);
+		  output
+			  << "Wire Type:\t" << fDetCons->GetWireType() << G4endl
+			  << "Confine Info:\t" << fDetCons->GetConfine() << G4endl
+			  << "Simulation result:" << G4endl;
+		  output.close();
 	  }
 	  else
 	  {

@@ -11,13 +11,13 @@
 //#include "TMath.h"
 #include "Randomize.hh"
 
-PENPrimaryGeneratorAction::PENPrimaryGeneratorAction():
+PENPrimaryGeneratorAction::PENPrimaryGeneratorAction(PENDetectorConstruction* det):
 	G4VUserPrimaryGeneratorAction(),
 	PrimaryE(0),
 	PrimaryName("")
 {
     PENGPS = new G4GeneralParticleSource();
-
+	fDetCons = det;
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
     G4String particleName = "e-";
 	G4double particleEnergy = 0 * MeV;
@@ -31,7 +31,8 @@ PENPrimaryGeneratorAction::PENPrimaryGeneratorAction():
 		i++;
 	}
 	*/
-	G4double Radius = 0.7 * mm;
+	G4double Radius = fDetCons->GetWireRadius();
+	G4double Length = 2 * cm;
     PENGPS->SetParticleDefinition(particleTable->FindParticle(particleName));
 	PENGPS->GetCurrentSource()->GetEneDist()->SetEnergyDisType("Mono");
 	PENGPS->GetCurrentSource()->GetEneDist()->SetMonoEnergy(particleEnergy);
@@ -40,7 +41,7 @@ PENPrimaryGeneratorAction::PENPrimaryGeneratorAction():
 	PENGPS->GetCurrentSource()->GetPosDist()->SetPosDisShape("Cylinder");
 	PENGPS->GetCurrentSource()->GetPosDist()->SetCentreCoords(G4ThreeVector(0, 0, 0));
 	PENGPS->GetCurrentSource()->GetPosDist()->SetRadius(Radius);
-	PENGPS->GetCurrentSource()->GetPosDist()->SetHalfZ(1 * cm);
+	PENGPS->GetCurrentSource()->GetPosDist()->SetHalfZ(Length / 2);
 
 	//PENGPS->GetCurrentSource()->GetPosDist()->ConfineSourceToVolume("PENShell");
 	//PENGPS->GetCurrentSource()->GetPosDist()->ConfineSourceToVolume("PENShell");

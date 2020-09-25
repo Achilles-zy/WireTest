@@ -74,6 +74,8 @@ PENDetectorConstruction::PENDetectorConstruction():
 	fABSFile = "PEN_ABS";
 	fType = "A1";
 	fConfine = "Wire";
+	fWireLength = 20 * cm;
+	fWireRadius = 0.7 * mm;
 	pmtReflectivity = 0.50;
 	G4cout << "Start Construction" << G4endl;
 	DefineMat();
@@ -516,8 +518,57 @@ G4VPhysicalVolume* PENDetectorConstruction::Construct()
 
   G4String WireType = fType;
   G4double WireLength = 20 * cm;
+  fWireLength = WireLength;
 
-  if (WireType == "A2") {
+	if (WireType == "A1") {
+
+	//=======================================
+	// A1 rho = 2.8457 g/m, 2.80 g/m from ref.
+	//=======================================
+
+	G4double ConductorRadius = 0.0762 * mm / 2;
+	G4double JacketRadius = 0.254 * mm / 2;
+	G4double BraidThickness = 0.02 * mm;
+	G4double BraidRadius = JacketRadius + BraidThickness;
+	G4double SubWireRadius = 0.5 * mm / 2;
+	G4double WireRadius = 1.25 * mm / 2;
+	fWireRadius = WireRadius;
+	G4double WireJacketThickness = WireRadius - (1 + sqrt(2)) * SubWireRadius;
+	G4Material* JacketMat = matPTFE;
+
+	G4Tubs* solidWire = new G4Tubs("solidWire", 0 * mm, WireRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicWire = new G4LogicalVolume(solidWire, JacketMat, "logicWire");
+	G4PVPlacement* physWire = new G4PVPlacement(0, G4ThreeVector(), logicWire, "Wire", logicEnv, false, 0, checkOverlaps);
+
+	G4Tubs* solidWireJacket = new G4Tubs("solidWireJacket", WireRadius - WireJacketThickness, WireRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicWireJacket = new G4LogicalVolume(solidWireJacket, JacketMat, "logicWireJacket");
+	G4PVPlacement* physWireJacket = new G4PVPlacement(0, G4ThreeVector(), logicWireJacket, "WireJacket", logicWire, false, 0, checkOverlaps);
+
+	G4Tubs* solidSubWire = new G4Tubs("solidWire", 0 * mm, SubWireRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicSubWire = new G4LogicalVolume(solidSubWire, JacketMat, "logicWire");
+	G4PVPlacement* physSubWire_0 = new G4PVPlacement(0, G4ThreeVector(sqrt(2) * SubWireRadius, 0, 0), logicSubWire, "SubWire_0", logicWire, false, 0, checkOverlaps);
+	G4PVPlacement* physSubWire_1 = new G4PVPlacement(0, G4ThreeVector(0, sqrt(2) * SubWireRadius, 0), logicSubWire, "SubWire_1", logicWire, false, 1, checkOverlaps);
+	G4PVPlacement* physSubWire_2 = new G4PVPlacement(0, G4ThreeVector(-sqrt(2) * SubWireRadius, 0, 0), logicSubWire, "SubWire_2", logicWire, false, 2, checkOverlaps);
+	G4PVPlacement* physSubWire_3 = new G4PVPlacement(0, G4ThreeVector(0, -sqrt(2) * SubWireRadius, 0), logicSubWire, "SubWire_3", logicWire, false, 3, checkOverlaps);
+
+	G4Tubs* solidConductor = new G4Tubs("solidConductor", 0 * mm, ConductorRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicConductor = new G4LogicalVolume(solidConductor, matCu, "logicConductor");
+	G4PVPlacement* physConductor = new G4PVPlacement(0, G4ThreeVector(), logicConductor, "Conductor", logicSubWire, false, 0, checkOverlaps);
+
+	G4Tubs* solidJacket = new G4Tubs("solidJacket", ConductorRadius, JacketRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicJacket = new G4LogicalVolume(solidJacket, JacketMat, "logicJacket");
+	G4PVPlacement* physJacket = new G4PVPlacement(0, G4ThreeVector(), logicJacket, "Jacket", logicSubWire, false, 0, checkOverlaps);
+
+	G4Tubs* solidBraid = new G4Tubs("solidBraid", JacketRadius, BraidRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicBraid = new G4LogicalVolume(solidBraid, matCu, "logicBraid");
+	G4PVPlacement* physBraid = new G4PVPlacement(0, G4ThreeVector(), logicBraid, "Braid", logicSubWire, false, 0, checkOverlaps);
+
+	G4Tubs* solidOuterJacket = new G4Tubs("solidOuterJacket", BraidRadius, SubWireRadius, WireLength / 2, 0, twopi);
+	G4LogicalVolume* logicOuterJacket = new G4LogicalVolume(solidOuterJacket, JacketMat, "logicOuterJacket");
+	G4PVPlacement* physOuterJacket = new G4PVPlacement(0, G4ThreeVector(), logicOuterJacket, "OuterJacket", logicSubWire, false, 0, checkOverlaps);
+  }
+
+  else if (WireType == "A2") {
 
 	  //=======================================
 	  // A2 rho = 2.0531 g/m, 2 g/m from ref.
@@ -528,6 +579,7 @@ G4VPhysicalVolume* PENDetectorConstruction::Construct()
 	  G4double JacketRadius = 0.68 * mm / 2;
 	  G4double BraidRadius = JacketRadius + BraidThickness;
 	  G4double WireRadius = 1 * mm / 2;
+	  fWireRadius = WireRadius;
 	  G4Material* JacketMat = matPTFE;
 
 	  G4Tubs* solidWire = new G4Tubs("solidJacket", 0 * mm, WireRadius, WireLength / 2, 0, twopi);
@@ -537,66 +589,22 @@ G4VPhysicalVolume* PENDetectorConstruction::Construct()
 	  G4Tubs* solidConductor = new G4Tubs("solidConductor", 0 * mm, ConductorRadius, WireLength / 2, 0, twopi);
 	  G4LogicalVolume* logicConductor = new G4LogicalVolume(solidConductor, matCu, "logicConductor");
 	  G4PVPlacement* physConductor = new G4PVPlacement(0, G4ThreeVector(), logicConductor, "Conductor", logicWire, false, 0, checkOverlaps);
-
+	  
 	  G4Tubs* solidJacket = new G4Tubs("solidJacket", ConductorRadius, JacketRadius, WireLength / 2, 0, twopi);
 	  G4LogicalVolume* logicJacket = new G4LogicalVolume(solidJacket, JacketMat, "logicJacket");
 	  G4PVPlacement* physJacket = new G4PVPlacement(0, G4ThreeVector(), logicJacket, "Jacket", logicWire, false, 0, checkOverlaps);
-
+	  
 	  G4Tubs* solidBraid = new G4Tubs("solidBraid", JacketRadius, BraidRadius, WireLength / 2, 0, twopi);
 	  G4LogicalVolume* logicBraid = new G4LogicalVolume(solidBraid, matCu, "logicBraid");
 	  G4PVPlacement* physBraid = new G4PVPlacement(0, G4ThreeVector(), logicBraid, "Braid", logicWire, false, 0, checkOverlaps);
-
+	  
 	  G4Tubs* solidOuterJacket = new G4Tubs("solidOuterJacket", BraidRadius, WireRadius, WireLength / 2, 0, twopi);
 	  G4LogicalVolume* logicOuterJacket = new G4LogicalVolume(solidOuterJacket, JacketMat, "logicOuterJacket");
 	  G4PVPlacement* physOuterJacket = new G4PVPlacement(0, G4ThreeVector(), logicOuterJacket, "OuterJacket", logicWire, false, 0, checkOverlaps);
+	  
   }
 
-  else if (WireType == "A1") {
 
-	  //=======================================
-	  // A1 rho = 2.8457 g/m, 2.80 g/m from ref.
-	  //=======================================
-
-	  G4double ConductorRadius = 0.0762 * mm / 2;
-	  G4double JacketRadius = 0.254 * mm / 2;
-	  G4double BraidThickness = 0.02 * mm;
-	  G4double BraidRadius = JacketRadius + BraidThickness;
-	  G4double SubWireRadius = 0.5 * mm / 2;
-	  G4double WireRadius = 1.25 * mm / 2;
-	  G4double WireJacketThickness = WireRadius - (1 + sqrt(2)) * SubWireRadius;
-	  G4Material* JacketMat = matPTFE;
-
-	  G4Tubs* solidWire = new G4Tubs("solidWire", 0 * mm, WireRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicWire = new G4LogicalVolume(solidWire, JacketMat, "logicWire");
-	  G4PVPlacement* physWire = new G4PVPlacement(0, G4ThreeVector(), logicWire, "Wire", logicEnv, false, 0, checkOverlaps);
-
-	  G4Tubs* solidWireJacket = new G4Tubs("solidWireJacket", WireRadius - WireJacketThickness, WireRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicWireJacket = new G4LogicalVolume(solidWireJacket, JacketMat, "logicWireJacket");
-	  G4PVPlacement* physWireJacket = new G4PVPlacement(0, G4ThreeVector(), logicWireJacket, "WireJacket", logicWire, false, 0, checkOverlaps);
-
-	  G4Tubs* solidSubWire = new G4Tubs("solidWire", 0 * mm, SubWireRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicSubWire = new G4LogicalVolume(solidSubWire, JacketMat, "logicWire");
-	  G4PVPlacement* physSubWire_0 = new G4PVPlacement(0, G4ThreeVector(sqrt(2) * SubWireRadius, 0, 0), logicSubWire, "SubWire_0", logicWire, false, 0, checkOverlaps);
-	  G4PVPlacement* physSubWire_1 = new G4PVPlacement(0, G4ThreeVector(0, sqrt(2) * SubWireRadius, 0), logicSubWire, "SubWire_1", logicWire, false, 1, checkOverlaps);
-	  G4PVPlacement* physSubWire_2 = new G4PVPlacement(0, G4ThreeVector(-sqrt(2) * SubWireRadius, 0, 0), logicSubWire, "SubWire_2", logicWire, false, 2, checkOverlaps);
-	  G4PVPlacement* physSubWire_3 = new G4PVPlacement(0, G4ThreeVector(0, -sqrt(2) * SubWireRadius, 0), logicSubWire, "SubWire_3", logicWire, false, 3, checkOverlaps);
-
-	  G4Tubs* solidConductor = new G4Tubs("solidConductor", 0 * mm, ConductorRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicConductor = new G4LogicalVolume(solidConductor, matCu, "logicConductor");
-	  G4PVPlacement* physConductor = new G4PVPlacement(0, G4ThreeVector(), logicConductor, "Conductor", logicSubWire, false, 0, checkOverlaps);
-
-	  G4Tubs* solidJacket = new G4Tubs("solidJacket", ConductorRadius, JacketRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicJacket = new G4LogicalVolume(solidJacket, JacketMat, "logicJacket");
-	  G4PVPlacement* physJacket = new G4PVPlacement(0, G4ThreeVector(), logicJacket, "Jacket", logicSubWire, false, 0, checkOverlaps);
-
-	  G4Tubs* solidBraid = new G4Tubs("solidBraid", JacketRadius, BraidRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicBraid = new G4LogicalVolume(solidBraid, matCu, "logicBraid");
-	  G4PVPlacement* physBraid = new G4PVPlacement(0, G4ThreeVector(), logicBraid, "Braid", logicSubWire, false, 0, checkOverlaps);
-
-	  G4Tubs* solidOuterJacket = new G4Tubs("solidOuterJacket", BraidRadius, SubWireRadius, WireLength / 2, 0, twopi);
-	  G4LogicalVolume* logicOuterJacket = new G4LogicalVolume(solidOuterJacket, JacketMat, "logicOuterJacket");
-	  G4PVPlacement* physOuterJacket = new G4PVPlacement(0, G4ThreeVector(), logicOuterJacket, "OuterJacket", logicSubWire, false, 0, checkOverlaps);
-  }
   else {
 	  G4cout << "Type does not exist!" << G4endl;
   }

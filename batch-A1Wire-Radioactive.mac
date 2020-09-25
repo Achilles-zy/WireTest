@@ -9,12 +9,13 @@
 
 #/gps/particle ion
 #/gps/ion 90 232 0 0
-/PEN/Det/Set/WireType A1
-/PEN/Det/Set/Confine Wire
+/PEN/det/set/wiretype A1
+/PEN/det/set/confine Wire
 
 # Initialize kernel
 /run/initialize
-/gps/pos/confine Wire
+#Default confinement of src is Wire
+#/gps/pos/confine Conductor
 
 #run 0
 /gps/particle ion

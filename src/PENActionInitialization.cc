@@ -11,8 +11,8 @@
 PENActionInitialization::PENActionInitialization(PENDetectorConstruction* det)
 	: G4VUserActionInitialization()
 {
-	fPrimaryGen = new PENPrimaryGeneratorAction();
 	fDet = det;
+	fPrimaryGen = new PENPrimaryGeneratorAction(fDet);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
