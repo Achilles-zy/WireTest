@@ -15,7 +15,7 @@ PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen,PENDetectorConstructio
 	EscapedElectronCount(0),
 	SignalEventCount(0),
 	ParticleE(0.),
-	PrimaryGenerator(gen),
+	fPrimaryGenerator(gen),
 	FileName("File")
 {
 	fDetCons = det;
@@ -77,13 +77,13 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
   accumulableManager->Merge();
 
   auto analysisManager = G4AnalysisManager::Instance();
-  G4String fileName = PrimaryGenerator->GetPrimaryName() + "_" + std::to_string(PrimaryGenerator->GetPrimaryE()).substr(0, 4) + "MeV";	  G4cout << fileName << G4endl;
+  //G4String fileName = fPrimaryGenerator->GetPrimaryName() + "_" + std::to_string(fPrimaryGenerator->GetPrimaryE()).substr(0, 4) + "MeV";	  G4cout << fileName << G4endl;
  // analysisManager->SetFileName(fileName);
 
   if (G4RunManager::GetRunManager()->GetRunManagerType() == 1) {
 	  G4cout << "Run " << aRun->GetRunID() << " finished." << G4endl;
-	  G4cout << "Particle Source is " << PrimaryGenerator->GetPrimaryName() << G4endl;
-	  G4cout << "Primary Energy = " << PrimaryGenerator->GetPrimaryE() << G4endl;
+	  G4cout << "Particle Source is " << fPrimaryGenerator->GetPrimaryName() << G4endl;
+	  G4cout << "Primary Energy = " << fPrimaryGenerator->GetPrimaryE() << G4endl;
 	  G4cout << "Escaped Electron Count = " << EscapedElectronCount.GetValue() << G4endl;
 	  G4cout << "Signal Event Count = " << SignalEventCount.GetValue() << G4endl;
 
@@ -97,8 +97,8 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
 	  }
 	  output
 		  << "Run ID:\t" << std::setw(5) << aRun->GetRunID() << '\t'
-		  << "Primary Particle is\t" << std::setw(5) << PrimaryGenerator->GetPrimaryName() << '\t'
-		  << "Primary Energy(MeV) =\t" << std::setw(5) << std::setiosflags(std::ios::fixed) << std::setprecision(2) << PrimaryGenerator->GetPrimaryE() << '\t'
+		  << "Primary Particle is\t" << std::setw(5) << fPrimaryGenerator->GetPrimaryName() << '\t'
+		  << "Primary Energy(MeV) =\t" << std::setw(5) << std::setiosflags(std::ios::fixed) << std::setprecision(2) << fPrimaryGenerator->GetPrimaryE() << '\t'
 		  << "Escaped Electron Count =\t" << std::left << std::setw(10) << EscapedElectronCount.GetValue() << '\t'
 		  << "Signal Event Count =\t" << std::setw(10) << SignalEventCount.GetValue() << G4endl;
 	  output.close();

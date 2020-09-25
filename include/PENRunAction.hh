@@ -38,7 +38,7 @@ private:
 	//number of events that generate signals in SiPMs
 	//G4int SiPMEventCount;
 	//G4int VetoEventCount;
-	PENPrimaryGeneratorAction* PrimaryGenerator;
+	PENPrimaryGeneratorAction* fPrimaryGenerator;
 	PENDetectorConstruction* fDetCons;
 	G4Accumulable<G4int> EscapedElectronCount;
 	G4Accumulable<G4int> SignalEventCount;

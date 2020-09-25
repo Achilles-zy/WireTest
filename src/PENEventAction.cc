@@ -90,6 +90,10 @@ void PENEventAction::EndOfEventAction(const G4Event* evt)
       //G4cout << "count signal" << G4endl;
       run->CountSignalEvent();
   }
+  G4int evtID = evt->GetEventID();
+  if (evtID % 5000 == 0) {
+      G4cout << evtID << G4endl;
+  }
 
   ID++;
 }

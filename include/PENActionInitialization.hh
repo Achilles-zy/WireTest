@@ -18,7 +18,7 @@ public:
 	virtual void Build() const;
 
 private:
-	PENPrimaryGeneratorAction* PrimaryGen;
+	PENPrimaryGeneratorAction* fPrimaryGen;
 	PENDetectorConstruction* fDet;
 };
 

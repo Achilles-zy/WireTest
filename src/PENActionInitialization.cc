@@ -11,7 +11,7 @@
 PENActionInitialization::PENActionInitialization(PENDetectorConstruction* det)
 	: G4VUserActionInitialization()
 {
-	PrimaryGen = new PENPrimaryGeneratorAction();
+	fPrimaryGen = new PENPrimaryGeneratorAction();
 	fDet = det;
 }
 
@@ -24,7 +24,7 @@ PENActionInitialization::~PENActionInitialization()
 
 void PENActionInitialization::BuildForMaster() const
 {
-	PENRunAction* runAction = new PENRunAction(PrimaryGen, fDet);
+	PENRunAction* runAction = new PENRunAction(fPrimaryGen, fDet);
 	SetUserAction(runAction);
 }
 
@@ -33,9 +33,9 @@ void PENActionInitialization::BuildForMaster() const
 void PENActionInitialization::Build() const
 {
 	//PENPrimaryGeneratorAction* PrimaryGen = new PENPrimaryGeneratorAction();
-	SetUserAction(PrimaryGen);
+	SetUserAction(fPrimaryGen);
 
-	PENRunAction* runAction = new PENRunAction(PrimaryGen, fDet);
+	PENRunAction* runAction = new PENRunAction(fPrimaryGen, fDet);
 	SetUserAction(runAction);
 
 	PENEventAction* eventAction = new PENEventAction(runAction);

@@ -45,6 +45,7 @@ PENDetectorMessenger::~PENDetectorMessenger()
 	delete fDetDir;
 	delete fPENDir;
 	delete commandSetWireType;
+	delete commandSetConfine;
 
 }
 
