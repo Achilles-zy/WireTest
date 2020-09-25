@@ -109,7 +109,7 @@
 /vis/geometry/set/colour logicJacket 0 0.5 0.5 0.5 1
 /vis/geometry/set/colour logicBraid 0 1 1 0 1
 /vis/geometry/set/colour logicOuterJacket 0 0.5 0.5 0.5 1
-/vis/geometry/set/colour logicHJacket 0 1 1 1 1
+/vis/geometry/set/colour logicWireJacket 0 1 1 1 1
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
 /vis/viewer/set/viewpointThetaPhi 120 150

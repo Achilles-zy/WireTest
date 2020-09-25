@@ -33,9 +33,6 @@ PENDetectorMessenger::PENDetectorMessenger(PENDetectorConstruction* Det)
 	commandSetConfine->SetParameterName("choice", false);
 	commandSetConfine->AvailableForStates(G4State_PreInit, G4State_Idle);
 	commandSetConfine->SetToBeBroadcasted(false);
-
-
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
