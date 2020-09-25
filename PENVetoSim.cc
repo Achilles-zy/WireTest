@@ -33,6 +33,10 @@
 
 int main(int argc, char** argv)
 {
+    // Choose the Random engine
+    G4Random::setTheEngine(new CLHEP::RanecuEngine);
+    G4long seed = time(NULL);
+    G4Random::setTheSeed(seed);
 #ifdef G4MT_USE
 	G4MTRunManager* PENRunManager = new G4MTRunManager;
 #else
@@ -63,7 +67,7 @@ int main(int argc, char** argv)
 	physicslist->SetVerboseLevel(0);
     PENRunManager -> SetUserInitialization(physicslist);
 
-    PENRunManager -> SetUserInitialization(new PENActionInitialization());
+    PENRunManager -> SetUserInitialization(new PENActionInitialization(PENDetCons));
 
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     UImanager->ApplyCommand("/run/verbose 0");
