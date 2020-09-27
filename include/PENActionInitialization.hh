@@ -19,7 +19,7 @@ public:
 
 private:
 	PENPrimaryGeneratorAction* fPrimaryGen;
-	PENDetectorConstruction* fDet;
+	PENDetectorConstruction* fDetCons;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

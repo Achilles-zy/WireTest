@@ -60,7 +60,6 @@ void PENPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	if (anEvent->GetEventID() == 0) {
 		PrimaryE = PENGPS->GetCurrentSource()->GetParticleEnergy();
 		PrimaryName = PENGPS->GetCurrentSource()->GetParticleDefinition()->GetParticleName();
-
 	}
 
 }

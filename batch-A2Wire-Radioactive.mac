@@ -87,3 +87,8 @@
 /gps/ion 81 208 0 0
 /gps/energy 0 keV
 /run/beamOn 10000000
+
+#run 12
+/gps/particle ion
+/gps/ion 19 40 0 0
+/run/beamOn 10000000

@@ -42,7 +42,8 @@ private:
 	PENDetectorConstruction* fDetCons;
 	G4Accumulable<G4int> EscapedElectronCount;
 	G4Accumulable<G4int> SignalEventCount;
-	G4String FileName;
+	G4String filename;
+	G4String txtname;
 
 };
 

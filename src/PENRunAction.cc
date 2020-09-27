@@ -16,7 +16,8 @@ PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen,PENDetectorConstructio
 	SignalEventCount(0),
 	ParticleE(0.),
 	fPrimaryGenerator(gen),
-	FileName("File")
+	filename("Simulation Results"),
+	txtname("Simulation Results")
 {
 	fDetCons = det;
 	auto analysisManager = G4AnalysisManager::Instance();
@@ -39,8 +40,6 @@ PENRunAction::PENRunAction(PENPrimaryGeneratorAction* gen,PENDetectorConstructio
  
 PENRunAction::~PENRunAction()
 {
-  
-
   // delete G4AnalysisManager::Instance();
 }
 
@@ -51,9 +50,11 @@ void PENRunAction::BeginOfRunAction(const G4Run* aRun)
   G4int RunID = aRun->GetRunID();
   auto analysisManager = G4AnalysisManager::Instance();
   //G4String FileName = "Result";
-  G4String filename = fDetCons->GetWireType() + "_" + fDetCons->GetConfine() + "_" + std::to_string(RunID);
+  G4String fileName = fDetCons->GetWireType() + "_" + fDetCons->GetConfine() + "_" + std::to_string(RunID);
+  filename = fileName;
+  txtname = fDetCons->GetWireType() + "_" + fDetCons->GetConfine();
   //analysisManager->SetFileName(FileName);
-  analysisManager->OpenFile(filename);
+  analysisManager->OpenFile(fileName);
 
   analysisManager->SetVerboseLevel(1);
 
@@ -89,8 +90,7 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
 
 	  std::ofstream output;
 	  if (aRun->GetRunID() == 0) {
-		  output.open("Simulation Result.txt", std::ios::ate);
-		  output.open("Simulation Result.txt", std::ios::ate);
+		  output.open(txtname + ".txt", std::ios::ate);
 		  output
 			  << "Wire Type:\t" << fDetCons->GetWireType() << G4endl
 			  << "Confine Info:\t" << fDetCons->GetConfine() << G4endl
@@ -99,10 +99,11 @@ void PENRunAction::EndOfRunAction(const G4Run* aRun)
 	  }
 	  else
 	  {
-		  output.open("Simulation Result.txt", std::ios::app);
+		  output.open(txtname + ".txt", std::ios::app);
 	  }
 	  output
 		  << "Run ID:\t" << std::setw(5) << aRun->GetRunID() << '\t'
+		  << "Number of Event is\t" << std::setw(10) << aRun->GetNumberOfEvent() << '\t'
 		  << "Primary Particle is\t" << std::setw(5) << fPrimaryGenerator->GetPrimaryName() << '\t'
 		  << "Primary Energy(MeV) =\t" << std::setw(5) << std::setiosflags(std::ios::fixed) << std::setprecision(2) << fPrimaryGenerator->GetPrimaryE() << '\t'
 		  << "Escaped Electron Count =\t" << std::left << std::setw(10) << EscapedElectronCount.GetValue() << '\t'
